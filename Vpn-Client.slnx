@@ -1,0 +1,11 @@
+﻿<Solution>
+  <Project Path="Vpn_Client.Android/Vpn_Client.Android.csproj">
+    <Deploy />
+  </Project>
+  <Project Path="Vpn_Client.Browser/Vpn_Client.Browser.csproj" />
+  <Project Path="Vpn_Client.Desktop/Vpn_Client.Desktop.csproj" />
+  <Project Path="Vpn_Client.iOS/Vpn_Client.iOS.csproj">
+    <Deploy />
+  </Project>
+  <Project Path="Vpn_Client/Vpn_Client.csproj" />
+</Solution>

@@ -1,0 +1,9 @@
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace Vpn_Client.ViewModels;
+
+public partial class MainViewModel : ViewModelBase
+{
+    [ObservableProperty]
+    private string _greeting = "ПРивет";
+}
