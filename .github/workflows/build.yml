@@ -1,0 +1,39 @@
+name: Ci/CD APP
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  build:
+    run-with: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .Net
+        uses: actions:setup-dotnet@v4
+        with:
+          dotnet-version: 10.0
+      - name: Restore dependencies
+        run: dotnet restore
+
+        #Сборка под линукс
+        - name: Build linux
+          run: dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c
+
+        #Сборка под виндовс
+        - name: Build windows
+          run: dotnet public Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c
+
+        #Сохранение готовых файлов
+        - name: Upload Artifaccts
+          uses: actions/upload-artifact@v4
+          with:
+            name: vpn-client-builds
+            path: |
+              Vpn-Client.Desktop/bin/Release/net*/linux-x64/publish
+              Vpn-Client.Desktop/bin/Release/net*/win-x64/publish/
+    
