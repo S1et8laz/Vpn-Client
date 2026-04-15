@@ -19,7 +19,7 @@ jobs:
           dotnet-version: '10.0.104'
  
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore Vpn-Client.Desktop/Vpn-Client.Desktop.csproj
 
         #Сборка под линукс
       - name: Build linux
