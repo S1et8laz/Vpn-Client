@@ -52,5 +52,5 @@ jobs:
           files: |
             ./publish-linux/*
             ./publish-windows/*
-          env:
-            GH_TOKEN: ${{ secrets.GUTHUB_TOKEN }}
+        env:
+          GH_TOKEN: ${{ secrets.GUTHUB_TOKEN }}
