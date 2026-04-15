@@ -16,25 +16,25 @@ jobs:
       - name: Setup .Net
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: '10.0.0xx'
-
+          dotnet-version: '10.0.104'
+ 
       - name: Restore dependencies
         run: dotnet restore
 
         #Сборка под линукс
-        - name: Build linux
-          run: dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c
+      - name: Build linux
+        run: dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c
 
         #Сборка под виндовс
-        - name: Build windows
-          run: dotnet public Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c
+      - name: Build windows
+        run: dotnet public Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c
 
         #Сохранение готовых файлов
-        - name: Upload Artifaccts
-          uses: actions/upload-artifact@v4
-          with:
-            name: vpn-client-builds
-            path: |
-              Vpn-Client.Desktop/bin/Release/net*/linux-x64/publish
-              Vpn-Client.Desktop/bin/Release/net*/win-x64/publish/
+      - name: Upload Artifaccts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vpn-client-builds
+          path: |
+            Vpn-Client.Desktop/bin/Release/net*/linux-x64/publish
+            Vpn-Client.Desktop/bin/Release/net*/win-x64/publish/
     
