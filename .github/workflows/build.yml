@@ -44,11 +44,11 @@ jobs:
         #проверка
         if: success() && github.ref == 'refs/heads/master'
         with:
-          tag_name: v${{github.run_number}}
-          name: Release v${{github.run_number}}
+          tag_name: latest
+          name: Release latest
           body: |
             автоматическая сборка из ветки master
-            версия ${{github.run_number}}
+            версия $latest
           draft: false
           prerelease: false
           files: |
