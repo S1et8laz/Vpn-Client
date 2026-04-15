@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    run-with: ubuntu-latest
+    run-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v6
