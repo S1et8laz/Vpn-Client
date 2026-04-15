@@ -11,6 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vpn_Client\Vpn_Client.csproj" />
+    <ProjectReference Include="..\Vpn-Client\Vpn-Client.csproj" />
   </ItemGroup>
 </Project>
