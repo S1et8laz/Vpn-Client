@@ -23,11 +23,11 @@ jobs:
 
         #Сборка под линукс
       - name: Build linux
-        run: dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c
+        run: dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c --Release -r linux-x64 --self-contained true
 
         #Сборка под виндовс
       - name: Build windows
-        run: dotnet public Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c
+        run: dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c --Release -r win-x64 --self-contained true
 
         #Сохранение готовых файлов
       - name: Upload Artifaccts
