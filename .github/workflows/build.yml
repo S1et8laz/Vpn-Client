@@ -23,11 +23,11 @@ jobs:
 
         #Сборка под линукс
       - name: Build linux
-        run: dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c --Release -r linux-x64 --self-contained true
+        run: dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c --Release -r linux-x64 --self-contained true -o ./publish-linux 
 
         #Сборка под виндовс
       - name: Build windows
-        run: dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c --Release -r win-x64 --self-contained true
+        run: dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c --Release -r win-x64 --self-contained true -o ./publish-windows
 
         #Сохранение готовых файлов
       - name: Upload Artifaccts
@@ -35,6 +35,6 @@ jobs:
         with:
           name: vpn-client-builds
           path: |
-            Vpn-Client.Desktop/bin/Release/net*/linux-x64/publish
-            Vpn-Client.Desktop/bin/Release/net*/win-x64/publish/
+            ./publish-linux/
+            ./publish-windows/
     
