@@ -53,4 +53,4 @@ jobs:
             ./publish-linux/*
             ./publish-windows/*
           env:
-            GITHUB_TOKEN: ${{secrets.GUTHUB_TOKEN}}
+            GH_TOKEN: ${{ secrets.GUTHUB_TOKEN }}
