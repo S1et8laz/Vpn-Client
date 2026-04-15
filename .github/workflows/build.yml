@@ -37,4 +37,20 @@ jobs:
           path: |
             ./publish-linux/
             ./publish-windows/
-    
+
+        #Релизы
+      - name: Create Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: v${{github.run_number}}
+          name: Release v${{github.run_number}}
+          body: |
+            автоматическая сборка из ветки master
+            версия ${{github.run_number}}
+          draft: false
+          prerelease: false
+          files: |
+            ./publish-linux/*
+            ./publish-windows/*
+          env:
+            GITHUB_TOKEN: ${{secrets.GUTHUB_TOKEN}}
