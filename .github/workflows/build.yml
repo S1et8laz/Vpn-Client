@@ -23,12 +23,15 @@ jobs:
 
         #Сборка под линукс
       - name: Build linux
-        run: dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c --Release -r linux-x64 --self-contained true -o ./publish-linux 
+        run: |
+          dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c --Release -r linux-x64 --self-contained true -o ./publish-linux
+          cd publish-linux && zip -r ../vpn-client-linux.zip . && cd ..
 
         #Сборка под виндовс
       - name: Build windows
-        run: dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c --Release -r win-x64 --self-contained true -o ./publish-windows
-
+        run: |
+          dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c --Release -r win-x64 --self-contained true -o ./publish-windows
+          cd publish-windows && zip -r ../vpn-client-windows.zip . && cd ..
         #Сохранение готовых файлов
       - name: Upload Artifaccts
         uses: actions/upload-artifact@v4
@@ -52,7 +55,7 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            ./publish-linux/*
-            ./publish-windows/*
+            ./vpn-client-linux.zip
+            ./vpn-client-windows.zip
         env:
           GH_TOKEN: ${{ secrets.GUTHUB_TOKEN }}
