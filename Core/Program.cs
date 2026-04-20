@@ -116,9 +116,11 @@ public class UpdateVpnCLient{
             if(VpnClient.Length > 0){
                 Console.WriteLine($"Запущенно {VpnClient.Length} процессов");
                 int i = 1;
+                var currentpid = Process.GetCurrentProcess().Id;
                 foreach(var proc in VpnClient){
                     Console.WriteLine($"Процесс {i}, имя {proc.ProcessName} убиваю");
                     try{
+                        if(currentpid == proc.Id) continue;
                         proc.Kill(true);
                         await proc.WaitForExitAsync();
                         proc.Dispose();
@@ -147,7 +149,11 @@ public class UpdateVpnCLient{
         Directory.Move(temdir,PathToDirectory);
         Console.WriteLine("Проверка обновления...");
         var exePath = Path.Combine(PathToDirectory, "Vpn-Client.Desktop");
-        Console.WriteLine(File.GetLastWriteTime(exePath));
+        if(!File.Exists(exePath)){
+           Console.WriteLine("Файл не найден после обновления!");
+            return; 
+        }
+        else Console.WriteLine(File.GetLastWriteTime(exePath));
     }
     public void StartProc(){
         try{
