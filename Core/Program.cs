@@ -31,14 +31,15 @@ public class UpdateVpnCLient{
         if(Updater.setName(args[0].ToLower())){
             try{
                 Console.WriteLine("Запуск процесса...");
-                await Updater.Downloadzip();
-                //Updater.StartProc();
+                await Updater.Downloadzip(args[0],args[1]);
+                Updater.StartProc();
             }
             catch(Exception ex){
                 Console.WriteLine(ex.Message);
             }
              
         }
+        Console.WriteLine("Updater закрывается");
 
     }
     public void Deserialisation(){
@@ -46,9 +47,7 @@ public class UpdateVpnCLient{
             .MaxBy(c=>c.published_at);
         if(OsRelease != null) Latest = OsRelease;
         else throw new Exception("нет релиза");
-        foreach(var asset in Latest.assets){
-            Console.WriteLine($"ИМЯ {asset.name}");
-        }
+        assets = Latest.assets;
         
 
         foreach(var asset in Latest.assets){
@@ -80,19 +79,27 @@ public class UpdateVpnCLient{
 
         return true;
     }
-    public async Task Downloadzip(){
+    public async Task Downloadzip(string Os, string version){
         try{
             Console.WriteLine("Запуск процесса...");
-            data = await client.GetByteArrayAsync($"{url}/{name_file}");
-            FileInfo fi = new FileInfo($"./{name_file}");
-            using(FileStream fs = fi.Create()){
-                fs.Write(data, 0, data.Length);
-                fs.Close();
-                Console.WriteLine("Запуск процесса...");
+            if(Version.Parse(Latest.tag_name) < Version.Parse(version))
+            {
+                string urldownload = assets.Where(c=>c.name.Contains(Os)).FirstOrDefault().browser_download_url;
+                data = await client.GetByteArrayAsync($"{urldownload}");
+                FileInfo fi = new FileInfo($"./{name_file}");
+                using(FileStream fs = fi.Create()){
+                    fs.Write(data, 0, data.Length);
+                    fs.Close();
+                    Console.WriteLine("Запуск процесса...");
+                }
+                await Clear();
+                await UnZip();
+                fi.Delete();
             }
-            await Clear();
-            //await UnZip();
-            fi.Delete();
+            else{
+                Console.WriteLine("нету новой версии");
+            }
+            
         }
         catch(Exception e){
             Console.WriteLine(e.Message);
@@ -127,7 +134,7 @@ public class UpdateVpnCLient{
 
     public void StartProc(){
         try{
-            using Process proc = Process.Start("../unzip/Vpn-Client.Desktop");
+            using Process proc = Process.Start("../Vpn-Client.Desktop");
                                
         }
         catch(Exception e){
