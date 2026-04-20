@@ -24,19 +24,20 @@ public class UpdateVpnCLient{
             Console.WriteLine("Введите аргумент для выбора системы, и текущей версии");
             return;
         }
-        Console.WriteLine($"Система = {args[0]}");
+        Console.WriteLine($"Система = {args[0]},  тэг {args[1]}");
         var Updater = new UpdateVpnCLient();
         await Updater.DownloadJson();
         Updater.Deserialisation();
         if(Updater.setName(args[0].ToLower())){
             try{
-                Console.WriteLine("Запуск процесса...");
-                if(Version.Parse(Updater.Latest.tag_name) < Version.Parse(args[1])){
-                    await Updater.Downloadzip(args[0],args[1]);
+                
+                if(Version.Parse(Updater.Latest.tag_name) > Version.Parse(args[1])){
+                    Console.WriteLine("Запуск процесса...");
+                    await Updater.Downloadzip(args[0].ToLower(),args[1]);
                     Updater.StartProc();
                 }
                 else{
-                    
+                    Console.WriteLine("Нету новой версии");                    
                 }
                 
             }
@@ -88,8 +89,6 @@ public class UpdateVpnCLient{
     public async Task Downloadzip(string Os, string version){
         try{
             Console.WriteLine("Запуск процесса...");
-            
-            
             string urldownload = assets.Where(c=>c.name.Contains(Os)).FirstOrDefault().browser_download_url;
             data = await client.GetByteArrayAsync($"{urldownload}");
             FileInfo fi = new FileInfo($"./{name_file}");
@@ -100,8 +99,7 @@ public class UpdateVpnCLient{
             }
             await Clear();
             await UnZip();
-            fi.Delete();
-                
+            fi.Delete();   
         }
         catch(Exception e){
             Console.WriteLine(e.Message);
