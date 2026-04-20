@@ -9,19 +9,19 @@ public partial class MainViewModel : ViewModelBase
     
     [ObservableProperty]
     private string _greeting;
-
+    private string version {get;set;}
     public MainViewModel(){
         Greeting = "hello";
+
     }
     public void getVersion(){
 
-        var version = Assembly.GetEntryAssembly()
+        version = Assembly.GetEntryAssembly()
             .GetName().Version?.ToString(3); 
-            Greeting = version == null? "null":version ;
             
     }
     public void Update(string Os){
-        using Process procc = Process.Start($"Core/test", $"{Os} {Greeting}");
+        using Process procc = Process.Start($"Core/test", $"{Os} {version}");
         if(procc == null) Console.WriteLine("error procc");
     }
 }
