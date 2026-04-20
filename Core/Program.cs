@@ -27,6 +27,8 @@ public class UpdateVpnCLient{
         }
         Console.WriteLine($"Система = {args[0]},  тэг {args[1]}, директория {args[2]}");
         var Updater = new UpdateVpnCLient();
+        client.DefaultRequestHeaders.Add("User-Agent", "Vpn_Client-Update");
+
         Updater.PathToDirectory = args[2];
         await Updater.DownloadJson();
         Updater.Deserialisation();
@@ -64,13 +66,15 @@ public class UpdateVpnCLient{
         }
     }
     public async Task DownloadJson(){
-        Console.WriteLine(InfoModel.GetUrlApi());
-        client.DefaultRequestHeaders.Add("User-Agent", "Vpn_Client-Update");
-
-        var response = await client.GetStringAsync(InfoModel.GetUrlApi());
-        
-        if(response!=null) releases = JsonSerializer.Deserialize<List<Releases>>(response);
-        else throw new Exception("не смог десериализовать");
+        try{
+            Console.WriteLine(InfoModel.GetUrlApi());
+            var response = await client.GetStringAsync(InfoModel.GetUrlApi());
+            releases = JsonSerializer.Deserialize<List<Releases>>(response);
+        }
+        catch(Exception e){
+            Console.WriteLine(e.Message);
+        }
+                
         
 
     }
@@ -83,23 +87,21 @@ public class UpdateVpnCLient{
             default: return false;
         }
     }
-    public async Task<bool> CheckVersion(){
-        var response = await client.GetStringAsync(url);
-
-        return true;
-    }
+    
     public async Task Downloadzip(string Os){
         try{
             Console.WriteLine("Запуск процесса...");
             string urldownload = assets.Where(c=>c.name.Contains(Os)).FirstOrDefault().browser_download_url;
             data = await client.GetByteArrayAsync($"{urldownload}");
-            FileInfo fi = new FileInfo($"{PathToDirectory}/Core/{name_file}");
+            var path = Path.Combine(PathToDirectory, "Core", name_file);
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            FileInfo fi = new FileInfo(path);
             using(FileStream fs = fi.Create()){
                 fs.Write(data, 0, data.Length);
                 fs.Close();
                 Console.WriteLine("Запуск процесса...");
             }
-            await Clear();
+            
             await UnZip();
             fi.Delete();   
         }
@@ -115,16 +117,15 @@ public class UpdateVpnCLient{
                 Console.WriteLine($"Запущенно {VpnClient.Length} процессов");
                 int i = 1;
                 foreach(var proc in VpnClient){
-                    Console.WriteLine($"Процесс {i}, имя {proc.ProcessName} убит");
-                    if(proc.CloseMainWindow()){
-                        if(!proc.WaitForExit(2000)){
-                            Console.WriteLine("Окно закрылось");
-                            proc.Kill();
-                        }
+                    Console.WriteLine($"Процесс {i}, имя {proc.ProcessName} убиваю");
+                    try{
+                        proc.Kill(true);
+                        await proc.WaitForExitAsync();
+                        proc.Dispose();
                     }
-                    else proc.Kill();
-                    proc.Dispose();
-                
+                    catch(Exception e){
+                        Console.WriteLine(e.Message);
+                    }    
                 }
             }
             else{
@@ -132,8 +133,22 @@ public class UpdateVpnCLient{
             }
 
     }
-    public async Task UnZip()=> await ZipFile.ExtractToDirectoryAsync($"{PathToDirectory}/Core/{name_file}",$"{PathToDirectory}/", overwriteFiles: true);
-
+    public async Task UnZip()
+    {
+        var temdir = Path.Combine(PathToDirectory,"temp_update");
+        var backupdir = Path.Combine(PathToDirectory, "backup_dir");
+        if(Directory.Exists(backupdir)) Directory.Delete(backupdir,true);
+        if(Directory.Exists(temdir)) Directory.Delete(temdir,true);
+        Directory.CreateDirectory(backupdir);
+        Directory.CreateDirectory(temdir);
+        await ZipFile.ExtractToDirectoryAsync($"{PathToDirectory}/Core/{name_file}",$"{temdir}", overwriteFiles: true);
+        await Clear();
+        Directory.Move(PathToDirectory,backupdir);
+        Directory.Move(temdir,PathToDirectory);
+        Console.WriteLine("Проверка обновления...");
+        var exePath = Path.Combine(PathToDirectory, "Vpn-Client.Desktop");
+        Console.WriteLine(File.GetLastWriteTime(exePath));
+    }
     public void StartProc(){
         try{
             using Process proc = Process.Start($"{PathToDirectory}/Vpn-Client.Desktop");
