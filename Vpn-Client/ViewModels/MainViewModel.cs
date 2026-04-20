@@ -21,7 +21,7 @@ public partial class MainViewModel : ViewModelBase
             
     }
     public void Update(string Os){
-        using Process procc = Process.Start($"dotnet", $"run --project ../Core/test.csproj {Os} {Greeting}");
+        using Process procc = Process.Start($"Core/test", $"{Os} {Greeting}");
         if(procc == null) Console.WriteLine("error procc");
     }
 }
