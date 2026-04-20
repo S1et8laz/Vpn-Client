@@ -19,7 +19,9 @@ jobs:
           dotnet-version: '10.0.104'
  
       - name: Restore dependencies
-        run: dotnet restore Vpn-Client.Desktop/Vpn-Client.Desktop.csproj
+        run: |
+          dotnet restore Vpn-Client.Desktop/Vpn-Client.Desktop.csproj
+          dotnet restore Core/test.csproj
         
       #Сборка под линукс
       - name: Build linux
@@ -33,7 +35,7 @@ jobs:
       - name: Build windows
         run: |
           dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c Release -r win-x64 --self-contained true -o ./publish-windows
-          dotnet publish /Core/test.csproj -c Release -r win-x64 --self-contained true -o ./publish-windows/Core/         
+          dotnet publish ./Core/test.csproj -c Release -r win-x64 --self-contained true -o ./publish-windows/Core/         
           cd publish-windows && zip -r ../vpn-client-windows.zip . && cd ..
 
 
