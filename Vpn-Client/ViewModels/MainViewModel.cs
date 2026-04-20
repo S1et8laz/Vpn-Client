@@ -10,8 +10,10 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     private string _greeting;
     private string version {get;set;}
+    private string PathToDirectory {get;set;}
     public MainViewModel(){
         Greeting = "salo";
+        PathToDirectory = Environment.CurrentDirectory;
 
     }
     public void getVersion(){
@@ -21,7 +23,7 @@ public partial class MainViewModel : ViewModelBase
             
     }
     public void Update(string Os){
-        using Process procc = Process.Start($"Core/test", $"{Os} {version}");
+        using Process procc = Process.Start($"Core/test", $"{Os} {version} {PathToDirectory}");
         if(procc == null) Console.WriteLine("error procc");
     }
 }

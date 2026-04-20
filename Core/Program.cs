@@ -15,17 +15,19 @@ public class UpdateVpnCLient{
     public List<Releases> releases = new List<Releases>();
     public Releases Latest = new Releases();
     public List<assets> assets = new List<assets>();
+    public string PathToDirectory {get;set;}
     public static async Task Main(string[] args){
-        if(args.Length>2){
+        if(args.Length>3){
             Console.WriteLine("слишком много аргументов");
             return;
         }
-        else if(args.Length < 2){
-            Console.WriteLine("Введите аргумент для выбора системы, и текущей версии");
+        else if(args.Length < 3){
+            Console.WriteLine("Введите аргумент для выбора системы, текущей версии и путь к директории");
             return;
         }
-        Console.WriteLine($"Система = {args[0]},  тэг {args[1]}");
+        Console.WriteLine($"Система = {args[0]},  тэг {args[1]}, директория {args[3]}");
         var Updater = new UpdateVpnCLient();
+        Updater.PathToDirectory = args[3];
         await Updater.DownloadJson();
         Updater.Deserialisation();
         if(Updater.setName(args[0].ToLower())){
@@ -91,7 +93,7 @@ public class UpdateVpnCLient{
             Console.WriteLine("Запуск процесса...");
             string urldownload = assets.Where(c=>c.name.Contains(Os)).FirstOrDefault().browser_download_url;
             data = await client.GetByteArrayAsync($"{urldownload}");
-            FileInfo fi = new FileInfo($"./{name_file}");
+            FileInfo fi = new FileInfo($"{PathToDirectory}/Core/{name_file}");
             using(FileStream fs = fi.Create()){
                 fs.Write(data, 0, data.Length);
                 fs.Close();
@@ -130,11 +132,11 @@ public class UpdateVpnCLient{
             }
 
     }
-    public async Task UnZip()=> await ZipFile.ExtractToDirectoryAsync($"./{name_file}","../", overwriteFiles: true);
+    public async Task UnZip()=> await ZipFile.ExtractToDirectoryAsync($"{PathToDirectory}/Core/{name_file}",$"{PathToDirectory}/", overwriteFiles: true);
 
     public void StartProc(){
         try{
-            using Process proc = Process.Start("../Vpn-Client.Desktop");
+            using Process proc = Process.Start($"{PathToDirectory}/Vpn-Client.Desktop");
                                
         }
         catch(Exception e){
