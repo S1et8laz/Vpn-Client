@@ -12,7 +12,7 @@ public partial class MainViewModel : ViewModelBase
     private string version {get;set;}
     private string PathToDirectory {get;set;}
     public MainViewModel(){
-        Greeting = "salo";
+        Greeting = "hello world";
         PathToDirectory = Environment.CurrentDirectory;
 
     }
