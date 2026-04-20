@@ -31,8 +31,14 @@ public class UpdateVpnCLient{
         if(Updater.setName(args[0].ToLower())){
             try{
                 Console.WriteLine("Запуск процесса...");
-                await Updater.Downloadzip(args[0],args[1]);
-                Updater.StartProc();
+                if(Version.Parse(Updater.Latest.tag_name) < Version.Parse(args[1])){
+                    await Updater.Downloadzip(args[0],args[1]);
+                    Updater.StartProc();
+                }
+                else{
+                    
+                }
+                
             }
             catch(Exception ex){
                 Console.WriteLine(ex.Message);
@@ -82,24 +88,20 @@ public class UpdateVpnCLient{
     public async Task Downloadzip(string Os, string version){
         try{
             Console.WriteLine("Запуск процесса...");
-            if(Version.Parse(Latest.tag_name) < Version.Parse(version))
-            {
-                string urldownload = assets.Where(c=>c.name.Contains(Os)).FirstOrDefault().browser_download_url;
-                data = await client.GetByteArrayAsync($"{urldownload}");
-                FileInfo fi = new FileInfo($"./{name_file}");
-                using(FileStream fs = fi.Create()){
-                    fs.Write(data, 0, data.Length);
-                    fs.Close();
-                    Console.WriteLine("Запуск процесса...");
-                }
-                await Clear();
-                await UnZip();
-                fi.Delete();
-            }
-            else{
-                Console.WriteLine("нету новой версии");
-            }
             
+            
+            string urldownload = assets.Where(c=>c.name.Contains(Os)).FirstOrDefault().browser_download_url;
+            data = await client.GetByteArrayAsync($"{urldownload}");
+            FileInfo fi = new FileInfo($"./{name_file}");
+            using(FileStream fs = fi.Create()){
+                fs.Write(data, 0, data.Length);
+                fs.Close();
+                Console.WriteLine("Запуск процесса...");
+            }
+            await Clear();
+            await UnZip();
+            fi.Delete();
+                
         }
         catch(Exception e){
             Console.WriteLine(e.Message);
