@@ -113,6 +113,11 @@ public class UpdateVpnCLient{
     }
     public async Task Clear()
     {
+        while(Process.GetProcessesByName("Vpn-Client.Desktop").Length > 0)
+        {
+            Console.WriteLine("Жду закрытия приложения...");
+            await Task.Delay(500);
+        }
         Process[] VpnClient = Process.GetProcessesByName("Vpn-Client.Desktop");
             if(VpnClient.Length > 0){
                 Console.WriteLine($"Запущенно {VpnClient.Length} процессов");
@@ -138,11 +143,10 @@ public class UpdateVpnCLient{
     }
     public async Task UnZip()
     {
-        var temdir = Path.Combine(PathToDirectory,"temp_update");
-        var backupdir = Path.Combine(PathToDirectory, "backup_dir");
+        var temdir = Path.GetFullPath(Path.Combine( PathToDirectory, ".." ,"temp_update"));
+        var backupdir = Path.GetFullPath(Path.Combine(PathToDirectory, "backup_dir"));
         if(Directory.Exists(backupdir)) Directory.Delete(backupdir,true);
         if(Directory.Exists(temdir)) Directory.Delete(temdir,true);
-        Directory.CreateDirectory(backupdir);
         Directory.CreateDirectory(temdir);
         await ZipFile.ExtractToDirectoryAsync($"{PathToDirectory}/Core/{name_file}",$"{temdir}", overwriteFiles: true);
         await Clear();

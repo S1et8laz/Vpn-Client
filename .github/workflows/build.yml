@@ -26,16 +26,16 @@ jobs:
       #Сборка под линукс
       - name: Build linux
         run: |
-          dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c Release -r linux-x64 --self-contained true -o ./publish-linux
-          dotnet publish ./Core/test.csproj -c Release -r linux-x64 --self-contained true -o ./publish-linux/Core/
+          dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c Release -r linux-x64 --self-contained true -o ./publish-linux/Client
+          dotnet publish ./Core/test.csproj -c Release -r linux-x64 --self-contained true -o ./publish-linux/Client/Core/
           cd publish-linux && zip -r ../vpn-client-linux.zip . && cd ..
           
 
         #Сборка под виндовс
       - name: Build windows
         run: |
-          dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c Release -r win-x64 --self-contained true -o ./publish-windows
-          dotnet publish ./Core/test.csproj -c Release -r win-x64 --self-contained true -o ./publish-windows/Core/         
+          dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c Release -r win-x64 --self-contained true -o ./publish-windows/Client
+          dotnet publish ./Core/test.csproj -c Release -r win-x64 --self-contained true -o ./publish-windows/Client/Core/         
           cd publish-windows && zip -r ../vpn-client-windows.zip . && cd ..
 
 
