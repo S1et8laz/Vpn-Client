@@ -143,22 +143,28 @@ public class UpdateVpnCLient{
     }
     public async Task UnZip()
     {
-        var temdir = Path.GetFullPath(Path.Combine( PathToDirectory, ".." ,"temp_update"));
-        var backupdir = Path.GetFullPath(Path.Combine(PathToDirectory, "backup_dir"));
-        if(Directory.Exists(backupdir)) Directory.Delete(backupdir,true);
-        if(Directory.Exists(temdir)) Directory.Delete(temdir,true);
-        Directory.CreateDirectory(temdir);
-        await ZipFile.ExtractToDirectoryAsync($"{PathToDirectory}/Core/{name_file}",$"{temdir}", overwriteFiles: true);
-        await Clear();
-        Directory.Move(PathToDirectory,backupdir);
-        Directory.Move(temdir,PathToDirectory);
-        Console.WriteLine("Проверка обновления...");
-        var exePath = Path.Combine(PathToDirectory, "Vpn-Client.Desktop");
-        if(!File.Exists(exePath)){
-           Console.WriteLine("Файл не найден после обновления!");
-            return; 
+        try{
+            var temdir = Path.GetFullPath(Path.Combine( PathToDirectory, ".." ,"temp_update"));
+            var backupdir = Path.GetFullPath(Path.Combine(PathToDirectory, ".." ,"backup_dir"));
+            if(Directory.Exists(backupdir)) Directory.Delete(backupdir,true);
+            if(Directory.Exists(temdir)) Directory.Delete(temdir,true);
+            Directory.CreateDirectory(temdir);
+            await ZipFile.ExtractToDirectoryAsync($"{PathToDirectory}/Core/{name_file}",$"{temdir}", overwriteFiles: true);
+            await Clear();
+            Directory.Move(PathToDirectory,backupdir);
+            Directory.Move(temdir,PathToDirectory);
+            Console.WriteLine("Проверка обновления...");
+            var exePath = Path.Combine(PathToDirectory, "Vpn-Client.Desktop");
+            if(!File.Exists(exePath)){
+                Console.WriteLine("Файл не найден после обновления!");
+                return; 
+            }
+            else Console.WriteLine(File.GetLastWriteTime(exePath));
         }
-        else Console.WriteLine(File.GetLastWriteTime(exePath));
+        catch(Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
     }
     public void StartProc(){
         try{
