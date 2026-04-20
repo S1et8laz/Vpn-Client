@@ -94,7 +94,8 @@ public class UpdateVpnCLient{
             string urldownload = assets.Where(c=>c.name.Contains(Os)).FirstOrDefault().browser_download_url;
             data = await client.GetByteArrayAsync($"{urldownload}");
             var path = Path.Combine(PathToDirectory, "Core", name_file);
-            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            if(!Directory.Exists(path)) Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            
             FileInfo fi = new FileInfo(path);
             using(FileStream fs = fi.Create()){
                 fs.Write(data, 0, data.Length);

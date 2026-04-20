@@ -13,7 +13,7 @@ public partial class MainViewModel : ViewModelBase
     private string PathToDirectory {get;set;}
     public MainViewModel(){
         Greeting = "hello world 2";
-        PathToDirectory = Environment.CurrentDirectory;
+        PathToDirectory = AppContext.BaseDirectory;
 
     }
     public void getVersion(){
@@ -23,7 +23,7 @@ public partial class MainViewModel : ViewModelBase
             
     }
     public void Update(string Os){
-        using Process procc = Process.Start($"Core/test", $"{Os} {version} {PathToDirectory}");
+        using Process procc = Process.Start($"{PathToDirectory}/Core/test", $"{Os} {version} {PathToDirectory}");
         if(procc == null) Console.WriteLine("error procc");
     }
 }
