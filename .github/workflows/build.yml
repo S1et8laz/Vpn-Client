@@ -50,7 +50,7 @@ jobs:
         #Получение версии
       - name: Get Version
         id: version
-        rin: |
+        run: |
           VERSION=$(dotnet msbuild Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -getProperty:Version -nologo)
           echo "version=$VERSION" >> GITHUB_OUTPUT
 
