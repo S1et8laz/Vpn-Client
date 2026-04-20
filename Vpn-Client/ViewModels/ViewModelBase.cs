@@ -2,6 +2,7 @@
 
 namespace Vpn_Client.ViewModels;
 
-public abstract class ViewModelBase : ObservableObject
+public abstract class ViewModelBase : ObservableObject 
 {
+
 }

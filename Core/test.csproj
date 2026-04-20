@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+    <PackageReference Include="System.IO.Compression" />
+    <PackageReference Include="System.Net.Http" />
+    <PackageReference Include="System.Text.Json" />
   </ItemGroup>
 
 </Project>

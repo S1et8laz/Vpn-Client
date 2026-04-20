@@ -6,7 +6,7 @@ using System.Linq;
 using Avalonia.Markup.Xaml;
 using Vpn_Client.ViewModels;
 using Vpn_Client.Views;
-
+using System;
 namespace Vpn_Client;
 
 public partial class App : Application
@@ -20,10 +20,24 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            MainViewModel mainviewmodel = new MainViewModel();
+
             desktop.MainWindow = new MainWindow
             {
-                DataContext = new MainViewModel()
+                 
+                DataContext = mainviewmodel
+               
             };
+            mainviewmodel.getVersion();
+            if(OperatingSystem.IsWindows())
+            {
+                mainviewmodel.Update("windows");
+            }
+            else if(OperatingSystem.IsLinux())
+            {
+                mainviewmodel.Update("linux");
+            }
+
         }
         else if (ApplicationLifetime is IActivityApplicationLifetime singleViewFactoryApplicationLifetime)
         {

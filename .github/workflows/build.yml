@@ -20,18 +20,24 @@ jobs:
  
       - name: Restore dependencies
         run: dotnet restore Vpn-Client.Desktop/Vpn-Client.Desktop.csproj
-
-        #Сборка под линукс
+        
+      #Сборка под линукс
       - name: Build linux
         run: |
-          dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c --Release -r linux-x64 --self-contained true -o ./publish-linux
+          dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c Release -r linux-x64 --self-contained true -o ./publish-linux
+          dotnet publish ./Core/test.csproj -c Release -r linux-x64 --self-contained true -o ./publish-linux/Core/
           cd publish-linux && zip -r ../vpn-client-linux.zip . && cd ..
+          
 
         #Сборка под виндовс
       - name: Build windows
         run: |
-          dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c --Release -r win-x64 --self-contained true -o ./publish-windows
+          dotnet publish Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -c Release -r win-x64 --self-contained true -o ./publish-windows
+          dotnet publish /Core/test.csproj -c Release -r win-x64 --self-contained true -o ./publish-windows/Core/         
           cd publish-windows && zip -r ../vpn-client-windows.zip . && cd ..
+
+
+
         #Сохранение готовых файлов
       - name: Upload Artifaccts
         uses: actions/upload-artifact@v4
@@ -41,17 +47,26 @@ jobs:
             ./publish-linux/
             ./publish-windows/
 
+        #Получение версии
+      - name: Get Version
+        id: version
+        rin: |
+          VERSION=$(dotnet msbuild Vpn-Client.Desktop/Vpn-Client.Desktop.csproj -getProperty:Version -nologo)
+          echo "version=$VERSION" >> GITHUB_OUTPUT
+
         #Релизы
       - name: Create Release
         uses: softprops/action-gh-release@v3
         #проверка
         if: success() && github.ref == 'refs/heads/master'
         with:
-          tag_name: v${{ github.run_number }}
-          name: Release v${{ github.run_number }}
+          tag_name: ${{steps.version.outputs.version}}
+          name: Release Desktop ${{steps.version.outputs.version}}
           body: |
             автоматическая сборка из ветки master
-            версия v${{ github.run_number }}
+            версия ${{steps.version.outputs.version}}
+          
+          body: |
           draft: false
           prerelease: false
           files: |

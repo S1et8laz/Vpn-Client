@@ -2,10 +2,7 @@
   <Project Path="Vpn-Client.Android/Vpn-Client.Android.csproj">
     <Deploy />
   </Project>
-  <Project Path="Vpn-Client.Browser/Vpn-Client.Browser.csproj" />
   <Project Path="Vpn-Client.Desktop/Vpn-Client.Desktop.csproj" />
-  <Project Path="Vpn-Client.iOS/Vpn-Client.iOS.csproj">
     <Deploy />
-  </Project>
   <Project Path="Vpn-Client/Vpn-Client.csproj" />
 </Solution>
