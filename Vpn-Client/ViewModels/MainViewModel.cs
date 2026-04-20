@@ -15,7 +15,7 @@ public partial class MainViewModel : ViewModelBase
     }
     public void getVersion(){
 
-        var version = Assembly.GetExecutingAssembly()
+        var version = Assembly.GetEntryAssembly()
             .GetName().Version?.ToString(3); 
             Greeting = version == null? "null":version ;
             
