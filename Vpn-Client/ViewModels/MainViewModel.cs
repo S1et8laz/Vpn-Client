@@ -11,7 +11,7 @@ public partial class MainViewModel : ViewModelBase
     private string _greeting;
     private string version {get;set;}
     public MainViewModel(){
-        Greeting = "hello";
+        Greeting = "salo";
 
     }
     public void getVersion(){

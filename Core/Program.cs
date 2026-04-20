@@ -33,7 +33,7 @@ public class UpdateVpnCLient{
                 
                 if(Version.Parse(Updater.Latest.tag_name) > Version.Parse(args[1])){
                     Console.WriteLine("Запуск процесса...");
-                    await Updater.Downloadzip(args[0].ToLower(),args[1]);
+                    await Updater.Downloadzip(args[0].ToLower());
                     Updater.StartProc();
                 }
                 else{
@@ -47,13 +47,13 @@ public class UpdateVpnCLient{
              
         }
         Console.WriteLine("Updater закрывается");
-
     }
     public void Deserialisation(){
         var OsRelease = releases.Where(c=>c.name.Contains("Desktop"))
             .MaxBy(c=>c.published_at);
         if(OsRelease != null) Latest = OsRelease;
         else throw new Exception("нет релиза");
+        Console.WriteLine($"новая версия релиза = {Latest.tag_name}");
         assets = Latest.assets;
         
 
@@ -86,7 +86,7 @@ public class UpdateVpnCLient{
 
         return true;
     }
-    public async Task Downloadzip(string Os, string version){
+    public async Task Downloadzip(string Os){
         try{
             Console.WriteLine("Запуск процесса...");
             string urldownload = assets.Where(c=>c.name.Contains(Os)).FirstOrDefault().browser_download_url;
