@@ -25,9 +25,9 @@ public class UpdateVpnCLient{
             Console.WriteLine("Введите аргумент для выбора системы, текущей версии и путь к директории");
             return;
         }
-        Console.WriteLine($"Система = {args[0]},  тэг {args[1]}, директория {args[3]}");
+        Console.WriteLine($"Система = {args[0]},  тэг {args[1]}, директория {args[2]}");
         var Updater = new UpdateVpnCLient();
-        Updater.PathToDirectory = args[3];
+        Updater.PathToDirectory = args[2];
         await Updater.DownloadJson();
         Updater.Deserialisation();
         if(Updater.setName(args[0].ToLower())){
