@@ -1,7 +1,6 @@
 ﻿<Solution>
-  <Project Path="Vpn-Client.Android/Vpn-Client.Android.csproj">
-    <Deploy />
-  </Project>
+    <!-- <Project Path="Vpn-Client.Android/Vpn-Client.Android.csproj"/>
+    <Deploy /> -->
   <Project Path="Vpn-Client.Desktop/Vpn-Client.Desktop.csproj" />
     <Deploy />
   <Project Path="Vpn-Client/Vpn-Client.csproj" />

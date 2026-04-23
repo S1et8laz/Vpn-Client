@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:Vpn_Client.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Vpn_Client.Views.MainView"
+             x:Class="Vpn_Client.Views.MainView" 
              x:DataType="vm:MainViewModel">
   <Design.DataContext>
     <!-- This only sets the DataContext for the previewer in an IDE,
