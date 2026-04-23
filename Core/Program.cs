@@ -41,11 +41,8 @@ public class UpdateVpnCLient{
         
     public void setName(string Osname){
         switch(Osname){
-            case "linux": name_file = "vpn-client-linux.zip";
-                            return true;
-            case "windows": name_file = "vpn-client-windows.zip";
-                            return true;
-            default: return false;
+            case "linux": name_file = "vpn-client-linux.zip";break;
+            case "windows": name_file = "vpn-client-windows.zip";break;
         }
     }
     public async Task Downloadzip(string url){
