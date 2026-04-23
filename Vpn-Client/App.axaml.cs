@@ -76,6 +76,7 @@ public partial class App : Application
                 await updateviewmodel.Update(us.GetDownloadUrl(lastrelease, Os),Os);
             }
             else{
+                Console.WriteLine("Обновлять нечего");
                 updatewindow.Close();
                 main.Show();
             }

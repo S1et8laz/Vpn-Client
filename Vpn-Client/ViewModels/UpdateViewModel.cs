@@ -21,6 +21,7 @@ public partial class UpdateViewModel : ViewModelBase
     public async Task Update(string url, String Os){
         using Process procc = Process.Start($"{PathToDirectory}/Core/test", $"{url} {PathToDirectory} {Os}");
         if(procc == null) Console.WriteLine("error procc");
+        Text = "Сейчас приложение закроется для обновления не пугайтесь";
         Thread.Sleep(5000);
         Environment.Exit(0);
     }

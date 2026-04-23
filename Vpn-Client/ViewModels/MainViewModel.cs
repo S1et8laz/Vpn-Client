@@ -8,7 +8,7 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     private string _greeting;
     public MainViewModel(){
-        Greeting = "hello world";
+        Greeting = "v2";
     }
     
     
