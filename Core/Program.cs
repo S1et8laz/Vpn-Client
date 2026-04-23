@@ -43,7 +43,7 @@ public class UpdateVpnCLient{
         try{
             Console.WriteLine("Запуск процесса...");
             data = await client.GetByteArrayAsync($"{url}");
-            var path = Path.Combine(PathToDirectory, "Core", name_file);
+            var path = Path.Combine(PathToDirectory, "..", name_file);
             Console.WriteLine($"Скачали в это место {path}");
             if(!Directory.Exists(path)) Directory.CreateDirectory(Path.GetDirectoryName(path)!);
             
@@ -76,7 +76,7 @@ public class UpdateVpnCLient{
         try{
             var temdir = Path.GetFullPath(Path.Combine( PathToDirectory, ".." ,"temp_update"));
             var backupdir = Path.GetFullPath(Path.Combine(PathToDirectory, ".." ,"backup_dir"));
-            var zipfile = Path.GetFullPath(Path.Combine(PathToDirectory,"Core",name_file ));
+            var zipfile = Path.GetFullPath(Path.Combine(PathToDirectory,"..",name_file ));
             Console.WriteLine($"путь к файлу зип {zipfile}");
             if(Directory.Exists(backupdir)) Directory.Delete(backupdir,true);
             if(Directory.Exists(temdir)) Directory.Delete(temdir,true);
@@ -86,7 +86,7 @@ public class UpdateVpnCLient{
             Directory.Move(PathToDirectory,backupdir);
             Directory.Move(temdir,PathToDirectory);
             Console.WriteLine("Проверка обновления...");
-            var exePath = Path.Combine(PathToDirectory, "Vpn-Client.Desktop");
+            var exePath = Path.GetFullPath(Path.Combine(PathToDirectory, "Vpn-Client.Desktop"));
             if(!File.Exists(exePath)){
                 Console.WriteLine("Файл не найден после обновления!");
                 return; 
