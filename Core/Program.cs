@@ -1,17 +1,11 @@
 ﻿
 using System.IO.Compression;
 using System.Diagnostics;
-using System.Text.Json;
-using Shared;
-using Shared.Models;
 namespace test;
 public class UpdateVpnCLient{
     public string name_file = String.Empty;
     public static HttpClient client = new HttpClient();
-    public byte[] data = Array.Empty<byte>();
-    public List<Release> releases = new List<Release>();
-    public Release Latest = new Release();
-    public List<Asset> assets = new List<Asset>();
+    public byte[] data {get; set;}
     public string PathToDirectory {get;set;}
     public static async Task Main(string[] args){
         if(args.Length>3){
@@ -104,12 +98,24 @@ public class UpdateVpnCLient{
         }
     }
     public void StartProc(){
-        try{
-            using Process proc = Process.Start($"{PathToDirectory}/Vpn-Client.Desktop");
-                               
-        }
-        catch(Exception e){
-            Console.WriteLine(e);
-        }
+        try {
+            var exePath = Path.Combine(PathToDirectory, "Vpn-Client.Desktop");
+
+            // 1. Обязательно даем права на запуск (только для Linux)
+            if (!OperatingSystem.IsWindows()) {
+                Process.Start("chmod", $"+x {exePath}").WaitForExit();
+            }
+
+            ProcessStartInfo startInfo = new ProcessStartInfo {
+                FileName = exePath,
+                WorkingDirectory = PathToDirectory, // 2. Указываем рабочую папку!
+                UseShellExecute = true
+        };
+        Console.WriteLine($"Запуск: {exePath}");
+        Process.Start(startInfo);
+    }
+    catch (Exception e) {
+        Console.WriteLine($"Ошибка при запуске: {e.Message}");
+    }
     }
 }

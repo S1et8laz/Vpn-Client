@@ -39,7 +39,7 @@ public partial class App : Application
                 Update("linux",desktop.MainWindow, updatewindow, updateviewmodel);
             }
             else if( OperatingSystem.IsWindows()){
-                Update("linux",desktop.MainWindow, updatewindow, updateviewmodel);
+                Update("windows",desktop.MainWindow, updatewindow, updateviewmodel);
             }
 
             
