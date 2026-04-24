@@ -1,6 +1,7 @@
 ﻿
 using System.IO.Compression;
 using System.Diagnostics;
+using System.IO;
 namespace test;
 public class UpdateVpnCLient{
     public string name_file = String.Empty;
@@ -25,6 +26,7 @@ public class UpdateVpnCLient{
         try{
             Console.WriteLine("Запуск процесса...");
             await Updater.Downloadzip(args[0]);
+            await Task.Delay(1000);
             Updater.StartProc();  
         }
         catch(Exception ex){
@@ -46,7 +48,8 @@ public class UpdateVpnCLient{
             data = await client.GetByteArrayAsync($"{url}");
             var path = Path.Combine(PathToDirectory, "..", name_file);
             Console.WriteLine($"Скачали в это место {path}");
-            if(!Directory.Exists(path)) Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            var dir = Path.GetDirectoryName(path)!;
+            if(!Directory.Exists(dir)) Directory.CreateDirectory(dir);
             
             FileInfo fi = new FileInfo(path);
             using(FileStream fs = fi.Create()){
@@ -85,8 +88,8 @@ public class UpdateVpnCLient{
             await ZipFile.ExtractToDirectoryAsync($"{zipfile}",$"{temdir}", overwriteFiles: true);
             await Clear();
             Console.WriteLine($"путь в бэйз директорию {PathToDirectory}");
-            Directory.Move(PathToDirectory,backupdir);
-            Directory.Move(Path.Combine(temdir,"Client"),PathToDirectory);
+            Move(PathToDirectory,backupdir);
+            Move(Path.Combine(temdir,"Client"),PathToDirectory);
             Console.WriteLine("Проверка обновления...");
             var exePath = Path.GetFullPath(Path.Combine(PathToDirectory, "Vpn-Client.Desktop"));
             if(!File.Exists(exePath)){
@@ -122,5 +125,20 @@ public class UpdateVpnCLient{
     catch (Exception e) {
         Console.WriteLine($"Ошибка при запуске: {e.Message}");
     }
+    }
+    protected void Move(string sourceDir, string pointDir)
+    {
+        if(!Directory.Exists(pointDir)) Directory.CreateDirectory(pointDir);
+
+        foreach(var file in Directory.GetFiles(sourceDir))
+        {
+            var dest = Path.Combine(pointDir, Path.GetFileName(file));
+            File.Move(file, dest, overwrite:true);
+        }
+        foreach(var dir in Directory.GetDirectories(sourceDir))
+        {
+            var dest = Path.Combine(pointDir, Path.GetFileName(dir));
+            Move(dir, dest);
+        }
     }
 }
