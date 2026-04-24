@@ -104,7 +104,7 @@ public class UpdateVpnCLient{
     }
     public void StartProc(){
         try {
-            var exePath = Path.Combine(PathToDirectory, "Vpn-Client.Desktop");
+            var exePath = Path.GetFullPath(Path.Combine(PathToDirectory, "Vpn-Client.Desktop"));
 
             // 1. Обязательно даем права на запуск (только для Linux)
             if (!OperatingSystem.IsWindows()) {
