@@ -9,6 +9,7 @@ using Shared.Models;
 using System.Reflection;
 using System.Collections.Generic;
 using Avalonia.Controls;
+using System.Threading.Tasks;
 namespace Vpn_Client;
 
 public partial class App : Application
@@ -22,24 +23,28 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            MainViewModel mainviewmodel = new MainViewModel();
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = mainviewmodel  
-            };
             UpdateViewModel updateviewmodel = new UpdateViewModel();
             UpdateWindow updatewindow = new UpdateWindow
             {
                 DataContext =  updateviewmodel
             };
+            MainViewModel mainviewmodel = new MainViewModel();
+            MainWindow mainWindow = new MainWindow
+            {
+                DataContext = mainviewmodel
+            };
+            desktop.MainWindow = updatewindow;
+            
+            
 
             
             if(OperatingSystem.IsLinux())
             {
-                Update("linux",desktop.MainWindow, updatewindow, updateviewmodel);
+                
+                Update("linux",desktop,updatewindow,updateviewmodel, mainWindow);
             }
             else if( OperatingSystem.IsWindows()){
-                Update("windows",desktop.MainWindow, updatewindow, updateviewmodel);
+                Update("windows",desktop,updatewindow,updateviewmodel, mainWindow);
             }
 
             
@@ -60,11 +65,11 @@ public partial class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    private async void Update(string Os, Window main, Window updatewindow,ViewModelBase Updateviewmodel)
+    private async Task Update(string Os, IClassicDesktopStyleApplicationLifetime desktop,  UpdateWindow updatewindow,  UpdateViewModel Updateviewmodel, MainWindow mainWindow)
     {
-        var updateviewmodel = (UpdateViewModel) Updateviewmodel;
         UpdateService us = new UpdateService();
         try{
+            updatewindow.Show();
             List<Release> releases = await us.GetReleases(InfoModel.GetUrlApi());
             var lastrelease = us.GetLatestRelease(releases);
             var version = Assembly.GetEntryAssembly()
@@ -72,18 +77,23 @@ public partial class App : Application
             var currentversion = Assembly.GetEntryAssembly().GetName().Version?.ToString(3);
             Console.WriteLine($"current version = {currentversion}");
             if(us.IsNewVersion(currentversion, lastrelease.tag_name)){
-                updatewindow.Show();
-                await updateviewmodel.Update(us.GetDownloadUrl(lastrelease, Os),Os);
+                await Updateviewmodel.Update(us.GetDownloadUrl(lastrelease, Os),Os);
             }
             else{
                 Console.WriteLine("Обновлять нечего");
+                desktop.MainWindow = mainWindow;
+                mainWindow.Show();
                 updatewindow.Close();
-                main.Show();
             }
         }
         catch(Exception e)
         {
             Console.WriteLine(e.Message);
+            Console.WriteLine($"Ошибка обновления: {e.Message}");
+            // В случае ошибки всё равно открываем главное окно
+            desktop.MainWindow = mainWindow;
+            mainWindow.Show();
+            updatewindow.Close();
         }
     }
 }
