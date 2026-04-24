@@ -83,8 +83,9 @@ public class UpdateVpnCLient{
             Directory.CreateDirectory(temdir);
             await ZipFile.ExtractToDirectoryAsync($"{zipfile}",$"{temdir}", overwriteFiles: true);
             await Clear();
+            Console.WriteLine($"путь в бэйз директорию {PathToDirectory}");
             Directory.Move(PathToDirectory,backupdir);
-            Directory.Move(temdir,PathToDirectory);
+            Directory.Move(Path.Combine(temdir,"Client"),PathToDirectory);
             Console.WriteLine("Проверка обновления...");
             var exePath = Path.GetFullPath(Path.Combine(PathToDirectory, "Vpn-Client.Desktop"));
             if(!File.Exists(exePath)){
@@ -94,6 +95,7 @@ public class UpdateVpnCLient{
             else Console.WriteLine(File.GetLastWriteTime(exePath));
             Directory.Delete(temdir,true);
             Directory.Delete(backupdir, true);
+            Directory.Delete(zipfile,true);
         }
         catch(Exception e)
         {
