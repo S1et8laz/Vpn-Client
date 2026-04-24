@@ -18,6 +18,7 @@ public class UpdateVpnCLient{
         }
         Console.WriteLine($"url = {args[0]}, директория {args[1]}, ос = {args[2]}");
         client.DefaultRequestHeaders.Add("User-Agent", "Vpn_Client-Update");
+        client.Timeout = TimeSpan.FromMinutes(5);
         var Updater = new UpdateVpnCLient();
         Updater.PathToDirectory = args[1];
         Updater.setName(args[2].ToLower());
@@ -95,7 +96,6 @@ public class UpdateVpnCLient{
             else Console.WriteLine(File.GetLastWriteTime(exePath));
             Directory.Delete(temdir,true);
             Directory.Delete(backupdir, true);
-            Directory.Delete(zipfile,true);
         }
         catch(Exception e)
         {
